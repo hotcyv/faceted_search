@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1">
+<title>SPARQL Faceter</title>
+
+<link rel="stylesheet" href="sparql-faceter/bootstrap.css">
+<link rel="stylesheet" href="sparql-faceter/semantic-faceted-search.css">
+</head>
+
+<body>
+
+<div id="nav"></div>
+
+<div ng-app="facetApp">
+  <div class="container-fluid" ng-controller="MainController as vm">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Servidores dos Institutos Federais de Educação, Ciência e Tecnologia</h1>
+        <div ng-if="vm.error">
+          <uib-alert type="danger">{{ vm.error }}</uib-alert>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <!-- Facets are defined here using the configurations defined in the controller -->
+        <seco-text-facet data-options="vm.facets.name"></seco-text-facet>
+        <seco-basic-facet data-options="vm.facets.organization"></seco-basic-facet>
+        <seco-basic-facet data-options="vm.facets.role"></seco-basic-facet>
+        <seco-basic-facet data-options="vm.facets.weeklyHours"></seco-basic-facet>
+      </div>
+
+      <!-- Results view -->
+      <div class="col-md-9">
+        <img src="sparql-faceter/loading-lg.gif" ng-show="vm.isLoadingResults" />
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Período na Instituição</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="membership in vm.page">
+              <td style="width:40%">{{ membership.name }}</td>
+              <td><span ng-if="membership.begin || membership.end">({{ (membership.begin|date) || '?' }} - {{ (membership.end|date) || 'Em atividade' }})</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- Pagination -->
+        <uib-pagination
+          class="pagination-sm"
+          max-size="10"
+          boundary-links="true"
+          rotate="false"
+          total-items="vm.totalCount"
+          ng-model="vm.pageNo"
+          ng-disabled="vm.isLoadingResults"
+          ng-change="vm.getPage()">
+        </uib-pagination>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script src="sparql-faceter/jquery.js"></script>
+<script src="sparql-faceter/bootstrap.js"></script>
+<script src="sparql-faceter/lodash.js"></script>
+<script src="sparql-faceter/angular.js"></script>
+<script src="sparql-faceter/ui-bootstrap-tpls.js"></script>
+<script src="sparql-faceter/spin.js"></script>
+<script src="sparql-faceter/angular-spinner.js"></script>
+<script src="sparql-faceter/checklist-model.js"></script>
+<script src="sparql-faceter/sparql-service.js"></script>
+<script src="sparql-faceter/semantic-faceted-search.js"></script>
+
+<script src="sparql-faceter/dbpedia-service.js"></script>
+<script src="sparql-faceter/demo-controller.js"></script>
+</body>
+</html>
